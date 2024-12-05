@@ -1,5 +1,4 @@
-# genotypecoexistence
-Data and code for: Towards a mechanistic understanding of genotype coexistence under warming (in prep.)
+# Data and code for: Towards a mechanistic understanding of genotype coexistence under warming (in prep.)
 <i>Marjolein Bruijning, Luc De Meester, Marco D. Visser, Erlend I. F. Fossen, Helene Vanvelk, Joost A. M. Raeymaekers, Lynn Govaert, Kristien I. Brans, Sigurd Einum, Eelke Jongejans</i>
 
 ## Datafile data/dataDaphnia20241205.csv:
