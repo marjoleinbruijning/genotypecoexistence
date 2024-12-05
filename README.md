@@ -2,10 +2,10 @@
 <i>Marjolein Bruijning, Luc De Meester, Marco D. Visser, Erlend I. F. Fossen, Helene Vanvelk, Joost A. M. Raeymaekers, Lynn Govaert, Kristien I. Brans, Sigurd Einum, Eelke Jongejans</i>
 
 ## Get started
-In order to run all code in R, all .R files should be in directory called 'code' (placed in the in working directory); the data file named 'dataDaphnia20241205.csv' containing raw data should be in directory called `data`; a directory named 'Results' should exist to store all output.
+In order to run all code in R, all .R files should be in directory called `code` (placed in the in working directory); the data file named `dataDaphnia20241205.csv` containing raw data should be in directory called `data`; a directory named `Results` should exist to store all output.
 
 ## R-Code in code/…
-Code to run all analyses and create all figures presented in the manuscript. All code runs from file run.R.
+Contains all files to run the analyses and create the figures presented in the manuscript. All code runs from file run.R.
 
 ## Datafile data/dataDaphnia20241205.csv:
 Every row in the dataset represents data on one individual. The dataset contains the following columns:
