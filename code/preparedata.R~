@@ -1,0 +1,59 @@
+
+
+dat <- read.csv('data/data.csv')
+
+## Scale variables
+  dat$temp <- scale(dat$temp)
+  dat$size <- scale(dat$size)
+
+  scTemp <- unlist(attributes(dat$temp)[2:3])
+  scSize <- unlist(attributes(dat$size)[2:3])
+
+  dat$sizeoff <- (dat$sizeoff-scSize[1]) / scSize[2]
+  dat$temp <- c(dat$temp)
+  dat$size <- c(dat$size)
+
+
+## add extra columns
+dat$daySq <- dat$day^2
+dat$size2 <- dat$size^2
+dat$off0 <- dat$clutchsize - 1
+dat$sexoff <- ifelse(dat$sexoff == 'f',1,0)
+dat$tempSq <- dat$temp^2
+
+
+## fit model for genotype frequency as function of temp and day
+cat('------ Fitting competition model \n')
+inc <- dat$popNo %in% mixpop & !is.na(dat$countryBin) #& !is.na(dat$gen)
+modFreq <- brm(countryBin ~ day + day:temp-1 + (0+day|popNo),data=dat[inc,],
+               family='bernoulli',iter=5000,cores=3,chains=3,thin=10)
+
+## Predict proportion B and N based on fitted model to fill in hetero- and con densities
+inc <- dat$popNo %in% mixpop
+tmp <- dat[inc,]
+tmp$popNo <- factor(tmp$popNo) # reset factors to only include mixed pops
+predB <- fitted(modFreq,newdata=tmp,type='response')[,1] # predicted proportion Belgians
+dat$predB <- NA # add new column to data
+dat$predB[inc] <- predB
+
+dat$predB[dat$pop1 %in% 7:12 & (is.na(dat$pop2)|dat$pop2%in%7:12) ] <- 1 # single country treatments
+dat$predB[dat$pop1 %in% 1:6 & (is.na(dat$pop2)|dat$pop2%in%1:6) ] <- 0
+
+dat$propCon <- NA # add new column
+dat$propCon[dat$country == 'B' & !is.na(dat$country)] <- dat$predB[dat$country == 'B' & !is.na(dat$country)]
+dat$propCon[dat$country == 'N' & !is.na(dat$country)] <- 1-dat$predB[dat$country == 'N' & !is.na(dat$country)]
+
+dat$propHetero <- 1-dat$propCon
+
+dat$nCon <- dat$n * dat$propCon
+dat$nHetero <- dat$n * dat$propHetero
+
+
+## data frame with all treatments
+popinfo <- data.frame(popNo=1:114,
+                     temps=tapply(dat$temp,dat$popNo,function(x) x[1]),
+                     pop1=tapply(dat$pop1,dat$popNo,function(x) x[1]),
+                     pop2=tapply(dat$pop2,dat$popNo,function(x) x[1]))
+
+
+write.csv(popinfo,file='/Manuscript/EcologyLetters/data/popinfo.csv')

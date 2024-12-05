@@ -1,0 +1,78 @@
+
+
+###########################################################################
+## Run all analysis
+###########################################################################
+
+setwd('~/Dropbox/Work/Manuscripts/DaphniaTemperature')
+
+## Packages
+require(lme4)
+require(brms)
+
+## Functions
+source('Scripts/functions.R')
+
+## Load and prepare data
+Scale <- TRUE # standardize variables
+source('Scripts/prepareData.R')
+
+
+## Fit brm vital rates
+vitalrateMethod <- 'brm'
+runall <- FALSE # fit and save all vital rate models?
+if (vitalrateMethod == 'brm') {
+    ## General settings
+    niter <- 20000
+    ncores <- 3
+    nchains <- 2
+    thin <- 10
+    source('Scripts/vitalratesBrm.R')
+} else {
+    source('Scripts/vitalratesGlm.R')
+}
+
+
+## Prepare everything for building IPM
+nc <- 100 # number of size classes
+allsizes <- seq(-2.5,2.5,length.out=nc) # size range, corresponds to: range((allsizes * scSize[2]) + scSize[1])
+cw <- allsizes[2]-allsizes[1] # class width
+
+if (vitalrateMethod == 'brm') {
+    resGrowth <- sd((modGrowth$data$growth-fitted(modGrowth)[,1]))
+    resOff <- sd((modOffsize$data$sizeoff-fitted(modOffsize)[,1]))
+} else if (vitalrateMethod == 'glm') {
+    resGrowth <- sd(residuals(modGrowth))
+    resOff <- sd(residuals(modOffsize))
+}
+
+
+## Perform all analysises
+n <- 6  # number of densities for dn1 dn2 plot
+allN <- seq(1,1000,length.out=n) # density range
+allTemp <-  (c(18,22,26,32)-scTemp[1]) / scTemp[2]
+ndraws <- 1000 # how many posterior samples
+
+## Plot colors
+colsCountry <- c('#7570b3','#1b9e77') ## country cols
+names(colsCountry) <- c('B','N')
+colsTemp <- wesanderson::wes_palette("Zissou1", 4, type = "continuous")
+
+##rmarkdown::render('SI_DaphniaCoexistence.Rmd',"pdf_document")
+
+## Temperature-dependent competition outcomes
+source('Scripts/figureCompetition.R') # Appendix figure
+
+## Coexistence outcomes
+source('Scripts/vectorplot.R') ## run analysis with posterior draws
+source('Scripts/figureIsoclines.R') # figure 3 (coexistence outcomes)
+source('Scripts/figureCoexistence.R') # figure 4 (coexistence outcomes)
+
+## Decomposition
+changeVR <- list(NA,'surv','growth','eggs','repr','clutch','sexoff','offsize')
+source('Scripts/decomposition.R')
+source('Scripts/figureDecomp.R') # figure 5 (decomposition)
+
+## Clonal variation in competition outcomes
+source('Scripts/clonalvar.R')
+source('Scripts/figureClonalvar.R') # figure 6 (clonal variation in competition outcomes)

@@ -1,0 +1,239 @@
+
+
+#############################################################################################
+## Structure of all models to be tested
+#############################################################################################
+# predictors
+add <- c('size','size2',
+         'temp',
+         'nSc', ## later replaced by nCon and nHetero
+         'country','sex')
+
+interact <- c('nSc*temp',
+             'nSc*country',
+             'nSc*temp*country')
+
+ind <- data.frame(size=0:1)
+for (i in 2:sum(length(add),length(interact))) {
+  ind <- cbind(ind,X=0:1)
+}
+colnames(ind) <- c(add,interact)
+allMod <- expand.grid(ind) [-1,]
+
+# remove duplicate models
+allMod <- allMod[!(allMod[,'temp'] == 0 & allMod[,'nSc*temp'] == 1),]
+allMod <- allMod[!(allMod[,'country'] == 0 & allMod[,'nSc*country'] == 1),]
+allMod <- allMod[!(allMod[,'nSc'] == 0 & allMod[,'nSc*country'] == 1),]
+allMod <- allMod[!(allMod[,'nSc'] == 0 & allMod[,'nSc*temp'] == 1),]
+allMod <- allMod[!(allMod[,'nSc'] == 0 & allMod[,'nSc*temp*country'] == 1),]
+allMod <- allMod[!(allMod[,'temp'] == 0 & allMod[,'nSc*temp*country'] == 1),]
+allMod <- allMod[!(allMod[,'country'] == 0 & allMod[,'nSc*temp*country'] == 1),]
+allMod <- allMod[!(allMod[,'nSc*temp'] == 0 & allMod[,'nSc*temp*country'] == 1),]
+allMod <- allMod[!(allMod[,'nSc*country'] == 0 & allMod[,'nSc*temp*country'] == 1),]
+
+
+# Add con and hetero specific density effects
+allMod2 <- allMod
+names(allMod2) <- sub('nSc','nCon',names(allMod2))
+
+allMod3 <- allMod
+names(allMod3) <- sub('nSc','nHetero',names(allMod))
+
+allMod2 <- cbind(allMod2,allMod3[,grep('nHetero',names(allMod3))])
+allMod2 <- allMod2[allMod2$nCon == 1,]
+
+# add colum names with 0's
+addcols <- names(allMod)[!names(allMod) %in% names(allMod2)]
+for (i in 1:length(addcols)) {
+  allMod2[,addcols[i]] <- 0
+}
+
+addcols <- names(allMod2)[!names(allMod2) %in% names(allMod)]
+for (i in 1:length(addcols)) {
+  allMod[,addcols[i]] <- 0
+}
+
+allMod <- rbind(allMod,allMod2)
+
+### Remove all nested models (not very efficient, but OK)
+allMod <- allMod[allMod[,'nSc'] == 0,] # no nSc
+allMod <- allMod[allMod[,'country'] == 1 & allMod[,'temp'] == 1 &
+                 allMod[,'size'] == 1 & allMod[,'size2'] == 1 &
+                 allMod[,'nCon'] == 1,]
+
+
+## All models to test
+forms <- list() # models to test
+allcov <- names(allMod)
+for (i in 1:nrow(allMod)) {
+  forms[[i]] <- as.formula(paste('y~',paste(allcov[allMod[i,] == 1 ],
+                                               collapse='+')))[-2]
+}
+
+forms <- lapply(forms,function(x) unlist(paste(x) [[2]]))
+forms <- lapply(forms,function(x) paste0(x,' + (1|clone)' )) ## add random clone effect
+
+
+################################################################
+### Put in list to fit models (to enable multiple imputed datasets, currently not implemented)
+datList <- list()
+datList[[1]] <- dat
+
+if (runall) {
+    
+    #################################################################
+    ## Fit models
+
+    modSexoff <- lapply(forms[allMod$sex == 0],function(x) {
+        mod <- brm_multiple(as.formula(paste('sexoff ~ ',x)),data=datList,
+                            family='bernoulli',
+                            iter=niter,cores=ncores,chains=nchains,thin=thin,
+                            silent=2,refresh=0,open_progress=FALSE
+                            )
+        mod
+    })
+    saveRDS(modSexoff,file='Results/modSexoff-full.rds')
+    rm(modSexoff); gc()
+
+
+    modOffsize <- lapply(forms[allMod$sex == 0],function(x) {
+        mod <- brm_multiple(as.formula(paste('sizeoff ~ ',x)),data=datList,
+                            iter=niter,cores=ncores,chains=nchains,thin=thin,silent=2,
+                            refresh=0,
+                            open_progress=FALSE#,
+                            ##prior=priors
+                            )
+        mod
+    })
+    saveRDS(modOffsize,file='Results/modOffsize-full.rds')
+    rm(modOffsize); gc()
+
+    modSurv <- lapply(forms[allMod$sex == 1],function(x) {
+        mod <- brm_multiple(as.formula(paste('surv ~ ',x)),data=datList,
+                            family='bernoulli',
+                            iter=niter,cores=ncores,chains=nchains,thin=thin,
+                            silent=2,refresh=0,open_progress=FALSE)
+        mod
+    })
+    saveRDS(modSurv,file='Results/modSurv-full.rds')
+    rm(modSurv); gc()
+
+
+    modEggs <- lapply(forms[allMod$sex == 0],function(x) {
+        mod <- brm_multiple(as.formula(paste('carryingeggs ~ ',x)),data=datList,
+                            family='bernoulli',
+                            iter=niter,cores=ncores,chains=nchains,thin=thin,
+                            silent=2,refresh=0,open_progress=FALSE)
+        mod
+    })
+    saveRDS(modEggs,file='Results/modEggs-full.rds')
+    rm(modEggs); gc()
+
+    
+    modRepr <- lapply(forms[allMod$sex == 0],function(x) {
+        mod <- brm_multiple(as.formula(paste('offspringproduced ~ ',x)),data=datList,
+                            family='bernoulli',
+                            iter=niter,cores=ncores,chains=nchains,
+                            thin=thin,silent=2,refresh=0,open_progress=FALSE)
+        mod
+    })
+    saveRDS(modRepr,file='Results/modRepr-full.rds')
+    rm(modRepr); gc()
+
+    
+    modClutch <- lapply(forms[allMod$sex == 0],function(x) {
+        mod <- brm_multiple(as.formula(paste('off0 ~ ',x)),data=datList,
+                            family='poisson',
+                            iter=niter,cores=ncores,chains=nchains,thin=thin,
+                            silent=2,refresh=0,open_progress=FALSE)
+        mod
+    })
+    saveRDS(modClutch,file='Results/modClutch-full.rds')
+    rm(modClutch); gc()
+
+    
+    modGrowth <- lapply(forms[allMod$sex == 1],function(x) {
+        mod <- brm_multiple(as.formula(paste('growth ~ ',x)),data=datList,
+                            iter=niter,cores=ncores,chains=nchains,thin=thin,
+                            silent=2,refresh=0,open_progress=FALSE)
+        mod
+    })
+    saveRDS(modGrowth,file='Results/modGrowth-full.rds')
+    rm(modGrowth); gc()
+
+
+    ##################################################################################
+    ## Perform model selection
+    modnames <- c('modSurv','modGrowth','modEggs','modRepr','modClutch','modSexoff','modOffsize')
+    loomat <- list()
+    
+    for (i in 1:length(modnames)) {
+
+        mod <- readRDS(paste0('Results/',modnames[i],'-full.rds'))
+        
+        for (j in 1:length(mod)) {
+            mod[[j]] <- add_criterion(mod[[j]],'loo')
+        }
+        
+        loomat[[i]] <- loo_compare(mod[[1]],mod[[2]],mod[[3]],mod[[4]],mod[[5]])
+
+        mod <- selectmodel(mod)
+        saveRDS(mod,file=paste0('Results/',modnames[i],'.rds'))
+    }
+
+}
+
+
+##################################################################################
+## Load previously saved models
+modSurv <- readRDS('Results/modSurv.rds')
+modGrowth <- readRDS('Results/modGrowth.rds')
+modEggs <- readRDS('Results/modEggs.rds')
+modRepr <- readRDS('Results/modRepr.rds')
+modClutch <- readRDS('Results/modClutch.rds')
+modSexoff <- readRDS('Results/modSexoff.rds')
+modOffsize <- readRDS('Results/modOffsize.rds')
+
+
+##################################################################################
+## Summarize parameters (fixed and random effects)
+modnames <- c('modSurv','modGrowth','modEggs','modRepr','modClutch','modSexoff','modOffsize')
+namess <- c('Survival','Growth','Carrying eggs','Egg development','Clutch size','Offspring sex','Neonate size')
+
+## Fixed effects
+coefnames <- unique(c(unlist(sapply(1:length(modnames),function(x) {
+  mod <- get(modnames[x])
+  rownames(fixef(mod))
+}))))
+
+coeff <- array(NA,dim=c(length(modnames),length(coefnames),3))
+colnames(coeff) <- coefnames
+rownames(coeff) <- namess
+
+for (i in 1:length(modnames)) {
+  mod <- get(modnames[i])
+  cf <- fixef(mod)
+  coeff[i,rownames(cf),1] <- cf[,'Estimate']
+  coeff[i,rownames(cf),2] <- cf[,'Est.Error']
+  coeff[i,rownames(cf),3] <- (cf[,'Q2.5'] < 0 & cf[,'Q97.5'] < 0) |
+                             (cf[,'Q2.5'] > 0 & cf[,'Q97.5'] > 0)
+
+}
+
+## Random effects of clone
+ranefs <- matrix(NA,nrow=12,ncol=length(modnames))
+colnames(ranefs) <- namess
+for (i in 1:length(modnames)) {
+    mod <- get(modnames[i])
+    ranefs[,i] <- ranef(mod)$clone[,,1][,1]
+}
+
+
+## sample size per vital rate
+##sum(!is.na(dat$surv) & !is.na(dat$clone) & !is.na(dat$nHetero) & !is.na(dat$size))
+##sum(!is.na(dat$growth) & !is.na(dat$clone) & !is.na(dat$nHetero) & !is.na(dat$size))
+##sum(!is.na(dat$carryingeggs) & !is.na(dat$clone) & !is.na(dat$nHetero) & !is.na(dat$size))
+##sum(!is.na(dat$sexoff) & !is.na(dat$clone) & !is.na(dat$nHetero) & !is.na(dat$size))
+##sum(!is.na(dat$sizeoff) & !is.na(dat$clone) & !is.na(dat$nHetero) & !is.na(dat$size))
+##sum(!is.na(dat$offspringproduced) & !is.na(dat$clone) & !is.na(dat$nHetero) & !is.na(dat$size))
+##sum(!is.na(dat$off0) & !is.na(dat$clone) & !is.na(dat$nHetero) & !is.na(dat$size))
