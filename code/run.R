@@ -6,8 +6,6 @@
 ## Bruijning et al., in prep.
 ###########################################################################
 
-setwd('~/Dropbox/Work/Manuscripts/DaphniaTemperature/Manuscript/EcologyLetters')
-
 ## All .R files should be in directory called 'code' (in working directory)
 ## .csv file named 'dataDaphnia20241205' containing raw data should be in directory called data
 ## directory named 'Results' should exist to store all output
