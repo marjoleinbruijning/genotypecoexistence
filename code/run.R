@@ -27,7 +27,7 @@ source('code/preparedata.R') ## Load and prepare data, fit genotype freq model
 ## General settings
 niter <- 50000
 ncores <- 3
-nchains <- 3
+nchains <- 4
 thin <- 10
 
 runall <- TRUE # fit and save all vital rate models? (takes long, run only once)
