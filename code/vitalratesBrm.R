@@ -119,8 +119,8 @@ if (runall) {
         mod <- readRDS(paste0('Results/',modnames[i],'-full.rds'))
         
         for (j in 1:length(mod)) {
-            mod[[j]] <- add_criterion(mod[[j]],'loo'))
-            cat(all(rhat(mod[[j]]) < 1.01),'\n')
+            mod[[j]] <- add_criterion(mod[[j]],'loo')
+            ##(all(rhat(mod[[j]]) < 1.01),'\n')
         }
         
         mod <- selectmodel(mod)
