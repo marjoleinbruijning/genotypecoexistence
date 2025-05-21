@@ -89,8 +89,14 @@ for (i in 1:length(allTemp)) {
     }
     
     
+    if (i %in% 1:3 ) {
     legend('topright',bty='n',legend=paste0(round(allTemp[i]*scTemp[2]+scTemp[1]),'°C'),
            cex=1.2)
+    } else if (i == 4) {
+          legend('topright',bty='n',legend=paste0('Extrapolate to ',round(allTemp[i]*scTemp[2]+scTemp[1]),'°C'),
+           cex=1.2)
+    }
+    
 
     if (i == 1) {
         text(c(.42,.42,.53),c(2.65,2.05,2.35),

@@ -57,6 +57,7 @@ colsTemp <- wesanderson::wes_palette("Zissou1", 4, type = "continuous")
 
 ## Coexistence outcomes
 source('code/vectorplot.R') # creates coexistence.rds and coexistenceMean.rds
+source('code/ipmsimul.R') # creates ipmsimultrajec.RData
 source('code/figureIsoclines.R') # creates figure2.pdf
 source('code/figureCoexistence.R') # creates figure3.pdf
 

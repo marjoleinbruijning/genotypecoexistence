@@ -19,7 +19,9 @@ par(mar=c(4,4,2,2))
 
 
 ## Load results
-dNmean <- readRDS('Results/coexistenceMean.rds')
+dNmean <- readRDS('Results/coexistenceMean.rds') ## MCT-IPM
+load('Results/ipmsimultrajec.RData') ## IPM simulations
+
 
 ## Plot output
 propb <- rep(NA,length(allTemp))
@@ -52,7 +54,7 @@ for (k in 1:length(allTemp)) {
                     pred$fit[1]+1.96*pred$se.fit[1]),
                 border=NA,col=paste0(colsCountry[i],'30'))
     }
-
+    
     ## Predict eq proportions (where do nullclines intersect?)
     beq <- (coef(mod[[1]])[1] - coef(mod[[2]])[1]) /
         ( coef(mod[[2]])[2] - coef(mod[[1]])[2] )
@@ -62,9 +64,17 @@ for (k in 1:length(allTemp)) {
     if (!is.na(neq) & neq < 0) neq <- 0
     propb[k] <- beq / (beq + neq)
     
-    points(beq,neq,cex=1.5)
+    points(beq,neq,cex=1.5,col='red',pch=16)
+    points(beq,neq,cex=1.5,col='black',pch=1)
+
+    
+    ## Add simulated trajectories (simulipm.R)
+    lines(NB[k,],NN[k,],col='orange') 
+    points(NB[k,ncol(NB)],NN[k,ncol(NN)],col='orange',pch=16,cex=1.5)
+    points(NB[k,ncol(NB)],NN[k,ncol(NN)],col='black',pch=1,cex=1.5)
 
 }
+
 legend('topright',col=colsCountry,lwd=2,legend=c('South','North'),bg='white',cex=1.2)
 
 text(grconvertX(1/4, "ndc", "user"), grconvertY(.02, "ndc", "user"),
@@ -75,7 +85,7 @@ text(grconvertX(.01, "ndc", "user"), grconvertY(3/6, "ndc", "user"),
 
 
 
-### Comparison genotype frequencies and IPM predictions
+### Comparison genotype frequencies and modelling predictions
 plot(100,100,
      ylim=c(0,1),
      xlim=c(18,34),
@@ -84,7 +94,17 @@ plot(100,100,
 fig_label('E)',pos='topright',cex=1.5)
 mtext('Equilibrium proportion Southern genotypes',2,line=2.2)
 mtext('Temperature',1,line=2.2)
+polygon(x=c(27,34,34,27,27),
+        y=c(-1,-1,2,2,-1),border=NA,col='#00000010')
+text(27,0.2,labels='Extrapolation',pos=4,cex=1.5,col='#00000080')
 
+legend('bottomleft',col=c('black','orange','red'),bty='n',lwd=2,
+       legend=c('Genotype frequency model',
+                'IPM simulations',
+                'MCT applied to IPM'),cex=1.2)
+
+
+## Genotype frequency modelling predictions
 pred <- posterior_epred(modFreq,newdata=data.frame(temp=seq(-2,3,.1),day=29),re_formula=NA)
 lines(seq(-2,3,.1)*scTemp[2]+scTemp[1],
       colMeans(pred),lwd=4)
@@ -94,11 +114,16 @@ lines(seq(-2,3,.1)*scTemp[2]+scTemp[1],
       apply(pred,2,quantile,prob=.975),lty=2)
 
 
-## Add IPM predictions
+## IPM-MCT predictions
 points(allTemp*scTemp[2]+scTemp[1],propb,cex=2.5,col='red',lwd=2,type='b',pch=16)
 points(allTemp*scTemp[2]+scTemp[1],propb,cex=2.5,col='black',pch=1)
-legend('bottomright',col=c('black','#f03b20'),bty='n',lwd=2,
-       legend=c('Genotype frequency model','IPM predictions'),cex=1.2)
+
+
+## IPM simulation results
+points(allTemp*scTemp[2]+scTemp[1],NB[,100] / (NN[,100]+NB[,100]),
+       type='b',pch=16,col='orange',cex=2.5,lwd=2)
+points(allTemp*scTemp[2]+scTemp[1],NB[,100] / (NN[,100]+NB[,100]),
+       pch=1,col='black',cex=2.5,lwd=2)
 
 
 dev.off()

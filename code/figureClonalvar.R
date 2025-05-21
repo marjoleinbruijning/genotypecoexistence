@@ -125,8 +125,10 @@ image(allniches,allk,mat,col=c(NA,'lightgrey'),add=TRUE)
 mtext('Niche overlap',1,line=2.3,cex=1)
 mtext('Fitness difference',2,line=2.3,cex=1)
 
-legend('bottomright',col=cols,pch=1,legend=as.numeric(names(cols))*scTemp[2] + scTemp[1],
-       title='Temperature',cex=1.2)
+legend('bottomright',col=cols,pch=1,
+       legend=paste0(as.numeric(names(cols))*scTemp[2] + scTemp[1],c('','','',' (Extrapolation)')),
+       title='Temperature',cex=1.2,bty='n')
+
 legend('topleft',pch=pchclone,title='Northern clones',legend=paste0('N',1:6),bg='white',cex=1.2)
 legend('topright',pch=16,title='Southern clones',legend=paste0('S',1:6),col=colsclone,
        bg='white',cex=1.2)
@@ -209,7 +211,7 @@ namess <- c('Surival','Growth',
 
 par(mar=c(1,0,1,0))
 
-## Add panel plot with competitivness
+## Add panel plot with competitiveness
 for (j in 1:2) {
 
     if (j == 1) inc <- 1:6
