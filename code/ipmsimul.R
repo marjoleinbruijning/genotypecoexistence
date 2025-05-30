@@ -26,8 +26,7 @@ for (j in 1:length(allTemp)) {
 
         vr <- buildVitalrates(allsizes,
                               treatments=treatments,
-                              ndraws=ndraws,
-                              predeffect='posterior')
+                              ndraws=ndraws)
 
         ipm <- createIPM(allsizes,
                          P=colMeans(vr$P),
@@ -50,8 +49,7 @@ for (j in 1:length(allTemp)) {
 
         vr <- buildVitalrates(allsizes,
                               treatments=treatments,
-                              ndraws=ndraws,
-                              predeffect='posterior')
+                              ndraws=ndraws)
 
         ipm <- createIPM(allsizes,
                          P=colMeans(vr$P),

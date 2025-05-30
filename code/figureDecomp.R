@@ -66,8 +66,8 @@ pdf('Results/Figure4.pdf',width=12,height=8)
 
 cols <-  wesanderson::wes_palette("GrandBudapest1", 7, type = "continuous")
 namess <- c('Original','Survival','Growth','Carrying eggs',
-            'Egg development','Clutch size',
-            'Neonate sex ratio','Neonate size')
+            'Neonate release','Clutch size',
+            'Neonate female probability','Neonate size')
 
 
 ly <- matrix(0,nrow=8,ncol=20)
@@ -95,8 +95,8 @@ par(mar=c(3,3,3,1),oma=c(4,2,2,2))
 ## Equilibrium proportions
 plot(100,100,xlim=c(1,3),ylim=c(.5,7.5),bty='n',xaxt='n',yaxt='n',xlab='',ylab='',
      xaxs='i',yaxs='i')
-points(rep(1.1,7),1:7,pch=16,col=cols,cex=2)
-text(rep(1.2,7),1:7,labels=namess[-1],pos=4,cex=1.5)
+points(rep(1.05,7),1:7,pch=16,col=cols,cex=2)
+text(rep(1.1,7),1:7,labels=namess[-1],pos=4,cex=1.1)
 mtext('Exchanged vital rate',4,outer=FALSE,line=-1)
 
 
