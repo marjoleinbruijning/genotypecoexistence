@@ -66,9 +66,4 @@ source('code/figureCoexistence.R') # creates figure3.pdf
 source('code/decomposition.R') # creates decomposition.rds
 source('code/figureDecomp.R') # creates figure4.pdf
 
-
-## Clonal variation in competition outcomes
-source('code/clonalvar.R') # creates clonalvariation.rds
-source('code/figureClonalvar.R') # creates figure5.pdf
-
 #########################################################
