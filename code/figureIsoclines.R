@@ -3,7 +3,7 @@
 ## Figure 2
 ####################################################################
 
-pdf('Results/figure2.pdf',width=12,height=6)
+pdf('Figures/figure2.pdf',width=12,height=6)
 
 ## Figure with null isoclines and equilibrium proportions
 ly <- matrix(0,nrow=6,ncol=12)

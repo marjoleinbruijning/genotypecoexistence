@@ -31,7 +31,7 @@ for (k in 1:length(allTemp)) {
 
             ##  Get coefficients
             pars[k,'a12',j] <- 1/coef(mod[[1]])[1]
-            pars[k,'a11',j] <- 1/ (-(coef(mod[[1]])[1]) / (coef(mod[[1]])[2]))
+            pars[k,'a11',j] <- 1/ (-(coef(mod[[1]])[1]) / (coef(mod[[1]])[2])
 
             pars[k,'a22',j] <- 1/coef(mod[[2]])[1]
             pars[k,'a21',j] <- 1/ (-(coef(mod[[2]])[1]) / (coef(mod[[2]])[2]))
@@ -48,13 +48,13 @@ fitnessdiff <- apply(pars,c(1,3),function(x) sqrt((x['a21']*x['a22'])/(x['a11']*
 
 
 allniches <- seq(0,1,length.out=1001)
-allk <-  seq(0,3.5,length.out=500)
+allk <-  seq(1/3,3,length.out=500)
 mat <- outer(allniches,allk,
              function(x,y) x < y & y < 1/x)
 
 
 
-pdf('Results/figure3.pdf')
+pdf('Figures/figure3.pdf')
 
 par(mfrow=c(2,2),mar=c(1,1,1,1),oma=c(4,4,0,0))
 
@@ -65,7 +65,8 @@ for (i in 1:length(allTemp)) {
     k <- with(df,MASS:::kde2d(nicheoverlap[i,-exl],fitnessdiff[i,-exl]))
     df <- contourLines(k$x,k$y,k$z,nlevels=10)
 
-    plot(100,100,xlim=c(0,1),ylim=c(0,3),xaxt='n',yaxt='n',xlab='',ylab='',xaxs='i',yaxs='i')
+    plot(100,100,xlim=c(0,1),ylim=c(1/3,3),xaxt='n',yaxt='n',xlab='',ylab='',
+         xaxs='i',yaxs='i',log='y')
     contour(allniches,allk,mat,add=TRUE,labels='',lwd=2)
     image(allniches,allk,mat,col=c(NA,'lightgrey'),add=TRUE)
     
@@ -99,15 +100,16 @@ for (i in 1:length(allTemp)) {
     
 
     if (i == 1) {
-        text(c(.42,.42,.53),c(2.65,2.05,2.35),
+        text(c(.42,.53,.53),c(2.65,1.5,2.05),
              labels=c('Coexistence','Northern dominance','Southern dominance'),
              col=c('black',rev(colsCountry)),cex=1)
 
-        arrows(x0=.78,x1=.85,y0=2.35,y1=2.25,col=colsCountry[1],length=.1)
+        arrows(x0=.78,x1=.85,y0=2.1,y1=2.05,col=colsCountry[1],length=.1)
         
-        arrows(x0=.2,x1=.25,y0=1.9,y1=.1,col=colsCountry[2],length=.1)
+        arrows(x0=.2,x1=.6,y0=1.9,y1=.45,col=colsCountry[2],length=.1)
 
-    } 
+    }
+    
 }
 
 mtext('Niche overlap',1,outer=TRUE,line=1)

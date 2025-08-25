@@ -62,7 +62,7 @@ fitnessdiff <- apply(pars,c(1,3,4),
                      function(x) sqrt((x['a21']*x['a22'])/(x['a11']*x['a12'])))
 
 
-pdf('Results/Figure4.pdf',width=12,height=8)
+pdf('Figures/Figure4.pdf',width=12,height=8)
 
 cols <-  wesanderson::wes_palette("GrandBudapest1", 7, type = "continuous")
 namess <- c('Original','Survival','Growth','Carrying eggs',
@@ -135,13 +135,13 @@ for (i in 1:length(allTemp)) {
 
 ## Coexistence planes
 allniches <- seq(0,1,length.out=1001)
-allk <-  seq(0,3.5,length.out=500)
+allk <-  seq(1/3.5,3.5,length.out=500)
 mat <- outer(allniches,allk,
              function(x,y) x < y & y < 1/x)
 
 for(k in 1:4) {
-    plot(100,100,xlim=c(0,1),ylim=c(.4,2.1),xaxt='n',
-         yaxt='n',xlab='',ylab='',xaxs='i',yaxs='i')
+    plot(100,100,xlim=c(0,1),ylim=c(1/2.1,2.1),xaxt='n',
+         yaxt='n',xlab='',ylab='',xaxs='i',yaxs='i',log='y')
     contour(allniches,allk,mat,add=TRUE,labels='',lwd=2)
     image(allniches,allk,mat,col=c(NA,'lightgrey'),add=TRUE)
 
@@ -193,8 +193,9 @@ for (j in 1:2) { ## over temperature
 
         inc <- df$temp == temps[j] & df$country == names(colsCountry)[i]
 
-        vioplot::vioplot(pred[,inc],col=colsCountry[i],ylim=c(0,1),yaxt='n',bty='l',
-                         xaxt='n')
+        vioplot::vioplot(pred[,inc],col=colsCountry[i],ylim=c(0,1),
+                         yaxt='n',bty='l',
+                         xaxt='n',ylog=FALSE)
         
         if (i == 1) {
             axis(2)
@@ -211,7 +212,6 @@ for (j in 1:2) { ## over temperature
     }
 }
 
-
 text(-56,7.3,labels='A) Vital rate decomposition: Equilibrium proportions',
      xpd=NA,cex=1.5,pos=4)
 
@@ -225,16 +225,10 @@ text(-8,3.3,labels='C) Density-dependent neonate\nfemale probabilities',
 
 
 text(-25,3.4,labels='Equilibrium proportion Southern clones',xpd=NA,cex=1.2)
-
 text(-25,-.5,labels='Niche overlap',xpd=NA,cex=1.2)
-
 text(-7.5,1.5,labels='Neonate female probability',xpd=NA,srt=90,cex=1.2)
-
-
 text(4.5,2.2,labels=paste0(' ',scTemp[2]*temps[1]+scTemp[1],' °C'),cex=1.2,xpd=NA)
 text(4.5,.5,labels=paste0(' ',scTemp[2]*temps[2]+scTemp[1],' °C'),cex=1.2,xpd=NA)
-
-
 text(-3.9,1.45,col=colsCountry[1],labels='Southern\ngenotypes',xpd=NA,cex=1.2)
 text(2.3,1.45,col=colsCountry[2],labels='Northern\ngenotypes',xpd=NA,cex=1.2)
 

@@ -39,7 +39,7 @@ mixpop <- c(1:114)[!1:114 %in% singlepop]
 ## Fit model for genotype frequency as function of temp and day
 inc <- dat$popNo %in% mixpop & !is.na(dat$countryBin)
 modFreq <- brm(countryBin ~ day + day:temp-1 + (0+day|popNo),data=dat[inc,],
-               family='bernoulli',iter=5000,cores=3,chains=3,thin=10)
+               family='bernoulli',iter=niter,cores=ncores,chains=nchains,thin=thin)
 
 
 ## Predict proportion B and N based on fitted model to fill in hetero- and con densities
