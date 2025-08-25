@@ -17,22 +17,22 @@ In order to run all code in R, start by getting all required files and folders i
 
 
 ## Run the analysis
-All code can be run from the file 'code/run.R', which consists of four parts:
+All code can be run from the file '/code/run.R', which consists of four parts:
 
 ### 1) Getting started
 Load all dependencies, functions and data. Here, also the genotype frequency model is fitted (can take a few minutes).
 
 ### 2) Fit vital rate models
-Fit each of the seven vital rate models. Set `runall <- TRUE` to fit and save all vital rate models. This can take up to a day, and should be run only once. Running this analysis produces two .rds files per vital rate, stored in `Results`:
+Fit each of the seven vital rate models. Set `runall <- TRUE` to fit and save all vital rate models. This can take up to a day, and should be run only once. Running this analysis produces two .rds files per vital rate, stored in /Results:
 * `modXXX-full.rds`: each of the tested models
 * `modXXX.rds`: the selected model based on leave-one-out cross-validation
 
 (here, `XXX` is a placeholder for the name of each vital rate)
 
-Set `runall <- FALSE` to load the pre-fitted vital rate models that are stored in `Results`. (Note that these files are provided on Github, so that all subsequent analyses can be performed without fitting the vital rate models)
+Set `runall <- FALSE` to load the pre-fitted vital rate models that are stored in /Results. (Note that these files are provided on Github, so that all subsequent analyses can be performed without fitting the vital rate models)
 
 ### 3) Perform IPM analyses
-This part runs the analyses that are presented in the manuscript: a) Assessing the temperature-dependent coexistence outcomes by combining Integral Projection Models (IPMs) with Modern Coexistence Theory (MCT); b) Running IPMs to simulate the dynamics of competing clones; c) Decomposition analysis to quantify the contribution of latitude-specific vital rates in determining coexistence outcomes. Each of these scripts stores the output in the `Results` folder. These analyses can take a few hours to complete and require the fitted and loaded vital rate objects obtained under 2).
+This part runs the analyses that are presented in the manuscript: a) Assessing the temperature-dependent coexistence outcomes by combining Integral Projection Models (IPMs) with Modern Coexistence Theory (MCT); b) Running IPMs to simulate the dynamics of competing clones; c) Decomposition analysis to quantify the contribution of latitude-specific vital rates in determining coexistence outcomes. Each of these scripts stores the output in the /Results folder. These analyses can take a few hours to complete and require the fitted and loaded vital rate objects obtained under 2).
 
 ### 4) Create figures
 Finally, the figures 2-4 presented in the manuscript can be created, using the objects created under 3).
