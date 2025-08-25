@@ -1,10 +1,10 @@
-# Data and code for: Linking individual performance to density-dependent population dynamics to understand temperature-mediated genotype coexistence (in prep.)
+# Data and code for: Linking individual performance to density-dependent population dynamics to understand temperature-mediated genotype coexistence
 <i>Marjolein Bruijning, Luc De Meester, Marco D. Visser, Erlend I. F. Fossen, Helene Vanvelk, Joost A. M. Raeymaekers, Lynn Govaert, Kristien I. Brans, Sigurd Einum, Eelke Jongejans</i>
 
 ## Dependencies
-`R` (version 4.5.0)
-Package `brms` (version 2.22.0)
-Package `wesanderson` (0.3.7)
+* `R` (version 4.5.0)
+* Package `brms` (version 2.22.0)
+* Package `wesanderson` (0.3.7)
 
 ## Get started
 In order to run all code in R, start by getting all required files and folders in place:
@@ -25,10 +25,11 @@ Load all dependencies, functions and data. Here, also the genotype frequency mod
 ### 2) Fit vital rate models
 Fit each of the seven vital rate models. Set `runall <- TRUE` to fit and save all vital rate models. This can take up to a day, and should be run only once. Running this analysis produces two .rds files per vital rate, stored in `Results`:
 * `modXXX-full.rds`: each of the tested models
-* `modXXX.rd`: the selected model based on leave-one-out cross-validation
+* `modXXX.rds`: the selected model based on leave-one-out cross-validation
+
 (here, `XXX` is a placeholder for the name of each vital rate)
 
-Set `runall <- FALSE` to load the pre-fitted vital rate models that are stored in `Results`. (Note that these files are provided on Github, so that all subsequent analyses can be performed without fitting these models)
+Set `runall <- FALSE` to load the pre-fitted vital rate models that are stored in `Results`. (Note that these files are provided on Github, so that all subsequent analyses can be performed without fitting the vital rate models)
 
 ### 3) Perform IPM analyses
 This part runs the analyses that are presented in the manuscript: a) Assessing the temperature-dependent coexistence outcomes by combining Integral Projection Models (IPMs) with Modern Coexistence Theory (MCT); b) Running IPMs to simulate the dynamics of competing clones; c) Decomposition analysis to quantify the contribution of latitude-specific vital rates in determining coexistence outcomes. Each of these scripts stores the output in the `Results` folder. These analyses can take a few hours to complete and require the fitted and loaded vital rate objects obtained under 2).
@@ -39,15 +40,15 @@ Finally, the figures 2-4 presented in the manuscript can be created, using the o
 
 ## R-Code in code/…
 This folder contains all .R files to run the analyses and create the figures presented in the manuscript:
-* decomposition.R: Performs decomposition analysis. Output: Results/decomposition.rds
-* figureCoexistence.R: Reproduces figure 3. Requires: Results/coexistence.rds. Output: Figures/figure3.pdf
-* figureDecomp.R: Reproduces figure 4. Requires: Results/decomposition.rds. Output: Figures/figure4.pdf
-* figureIsoclines.R: Reproduces figure 2. Requires: Results/coexistenceMean.rds; Results/ipmsimultrajec.RData. Output: Figures/figure2.pdf
+* decomposition.R: Performs decomposition analysis. *Output: Results/decomposition.rds*
+* figureCoexistence.R: Reproduces figure 3. Requires: Results/coexistence.rds. *Output: Figures/figure3.pdf*
+* figureDecomp.R: Reproduces figure 4. Requires: Results/decomposition.rds. *Output: Figures/figure4.pdf*
+* figureIsoclines.R: Reproduces figure 2. Requires: Results/coexistenceMean.rds; Results/ipmsimultrajec.RData. *Output: Figures/figure2.pdf*
 * functions.R: All functions related to building the IPMs
-* ipmsimul.R: Simulate population trajectories of competing genotypes. Output: Results/ipmsimultrajec.RData
+* ipmsimul.R: Simulate population trajectories of competing genotypes. *Output: Results/ipmsimultrajec.RData*
 * preparedata.R: load the raw data and prepare data for all subsequent analyses, fit Genotype Frequency model.
 * run.R: Script with the full workflow.
-* vectorplot.R: Apply MCT to IPM to assess temperature-mediated genotype coexistence. Output: Results/coexistence.rds; Results/coexistenceMean.rds.
+* vectorplot.R: Apply MCT to IPM to assess temperature-mediated genotype coexistence. *Output: Results/coexistence.rds; Results/coexistenceMean.rds*
 * vitalratesBrm.R: Run or load all vital rate models.
 
 
