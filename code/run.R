@@ -15,6 +15,11 @@
 ## 1) Getting started
 ###########################################################################
 
+## Create folders Results and Figures if they do not exist yet to store output
+if (!file.exists('Results')) {dir.create('Results')}
+if (!file.exists('Figures')) {dir.create('Figures')}
+
+
 ## General settings for the Bayesian regression models
 niter <- 50000
 ncores <- 3

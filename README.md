@@ -11,16 +11,14 @@ In order to run all code in R, start by getting all required files and folders i
 
 * All .R files should be in directory called 'code'.
 * The .csv file named 'dataDaphnia20241205' containing raw data should be in directory called 'data'.
-* A directory named 'Results' should exist to store all output.
-* A directory named 'Figures' should exist to store all output.
-* Open an R workspace and set its working directory to the folder that contains 'code','data' and 'Results' and 'Figures'.
+* Open an R workspace and set its working directory to the folder that contains the folders 'code' and 'data'.
 
 
 ## Run the analysis
 All code can be run from the file '/code/run.R', which consists of four parts:
 
 ### 1) Getting started
-Load all dependencies, functions and data. Here, also the genotype frequency model is fitted (can take a few minutes).
+Load all dependencies, functions and data, and create folders to store output (if they do not exist yet). Here, also the genotype frequency model is fitted (can take a few minutes).
 
 ### 2) Fit vital rate models
 Fit each of the seven vital rate models. Set `runall <- TRUE` to fit and save all vital rate models. This can take up to a day, and should be run only once. Running this analysis produces two .rds files per vital rate, stored in /Results:
