@@ -15,13 +15,16 @@
 ## 1) Getting started
 ###########################################################################
 
+## Please set your working directory here to the root folder for the
+## code (i.e. the rootfolder containing the "code" and "data" folders)
+
 ## Create folders Results and Figures if they do not exist yet to store output
 if (!file.exists('Results')) {dir.create('Results')}
 if (!file.exists('Figures')) {dir.create('Figures')}
 
 
 ## General settings for the Bayesian regression models
-niter <- 50000
+niter <- 10000 # (set to 50000 in manuscript)
 ncores <- 3
 nchains <- 4
 thin <- 10
@@ -40,7 +43,7 @@ source('code/preparedata.R')
 ## 2) Fit vital rate models
 #########################################################
 
-runall <- FALSE
+runall <- TRUE
 ## If TRUE, fit and save all vital rate models (takes up to a day)
 ## If FALSE, existing Rmd files will be loaded from folder 'Results'
 
@@ -63,7 +66,7 @@ resOff <- sd((modOffsize$data$sizeoff-fitted(modOffsize)[,1])) # residual offspr
 n <- 6  # number of sym- and allopatric densities
 allN <- seq(1,1000,length.out=n) # density range
 allTemp <-  (c(18,22,26,32)-scTemp[1]) / scTemp[2] # evaluated temperatures (standardized)
-ndraws <- 1000 # number of posterior draws
+ndraws <- 100 # number of posterior draws (set to 1000 in manuscript)
 
 
 ## Temperature-dependent coexistence

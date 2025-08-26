@@ -31,7 +31,7 @@ for (k in 1:length(allTemp)) {
 
             ##  Get coefficients
             pars[k,'a12',j] <- 1/coef(mod[[1]])[1]
-            pars[k,'a11',j] <- 1/ (-(coef(mod[[1]])[1]) / (coef(mod[[1]])[2])
+            pars[k,'a11',j] <- 1/ (-(coef(mod[[1]])[1]) / (coef(mod[[1]])[2]))
 
             pars[k,'a22',j] <- 1/coef(mod[[2]])[1]
             pars[k,'a21',j] <- 1/ (-(coef(mod[[2]])[1]) / (coef(mod[[2]])[2]))
