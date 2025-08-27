@@ -6,6 +6,8 @@
 
 
 ## Figure decomposition
+changeVR <- list(NA,'surv','growth','eggs','repr','clutch','sexoff','offsize')
+
 dN <- readRDS('Results/decomposition.rds')
 
 propb <- array(NA,dim=c(length(allTemp),length(changeVR),ndraws))
