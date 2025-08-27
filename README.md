@@ -5,6 +5,9 @@
 * `R` (version 4.5.0)
 * Package `brms` (version 2.22.0)
 * Package `wesanderson` (0.3.7)
+* Package `vioplot` (0.4.0)
+* Package `MASS` (7.3.55)
+* Package `readr` (2.1.5)
 
 ## Get started
 In order to run all code in R, start by getting all required files and folders in place:

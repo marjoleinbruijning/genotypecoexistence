@@ -30,7 +30,8 @@ nchains <- 4
 thin <- 10
 
 ## Load required packages
-require(brms); require(wesanderson) 
+require(brms); require(wesanderson); require(vioplot)
+require(MASS); require(readr)
 
 ## Load functions
 source('code/functions.R')
@@ -43,7 +44,7 @@ source('code/preparedata.R')
 ## 2) Fit vital rate models
 #########################################################
 
-runall <- TRUE
+runall <- FALSE
 ## If TRUE, fit and save all vital rate models (takes up to a day)
 ## If FALSE, existing Rmd files will be loaded from folder 'Results'
 
@@ -66,7 +67,7 @@ resOff <- sd((modOffsize$data$sizeoff-fitted(modOffsize)[,1])) # residual offspr
 n <- 6  # number of sym- and allopatric densities
 allN <- seq(1,1000,length.out=n) # density range
 allTemp <-  (c(18,22,26,32)-scTemp[1]) / scTemp[2] # evaluated temperatures (standardized)
-ndraws <- 100 # number of posterior draws (set to 1000 in manuscript)
+ndraws <- 1000 # number of posterior draws (set to 1000 in manuscript)
 
 
 ## Temperature-dependent coexistence
